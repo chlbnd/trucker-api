@@ -27,11 +27,6 @@ class TruckType implements \JsonSerializable
      */
     private $truckers;
 
-    public function __construct()
-    {
-        $this->truckers = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;

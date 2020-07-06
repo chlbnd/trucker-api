@@ -42,18 +42,6 @@ class ResponseFactory
         $this->itemsPerPage = !is_null($page) ? $itemsPerPage : null;
     }
 
-    public static function fromError(\Throwable $error)
-    {
-        return new self(
-            [
-                'message' => $error->getMessage()
-            ],
-            false,
-            Response::HTTP_INTERNAL_SERVER_ERROR,
-            null
-        );
-    }
-
     public function getResponse(): JsonResponse
     {
         $data = get_object_vars($this);
@@ -65,5 +53,19 @@ class ResponseFactory
         }
 
         return new JsonResponse($data, $this->status);
+    }
+
+    public static function fromError(\Throwable $error)
+    {
+        $statusCode = method_exists($error, 'getStatusCode')
+            ? $error->getStatusCode()
+            : Response::HTTP_INTERNAL_SERVER_ERROR;
+
+        return new self(
+            ['message' => $error->getMessage()],
+            false,
+            $statusCode,
+            null
+        );
     }
 }

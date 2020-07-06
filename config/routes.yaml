@@ -26,6 +26,18 @@ get_trucker:
     methods:
       - GET
 
+update_trucker:
+    path: /truckers/{id}
+    controller: App\Controller\TruckersController::update
+    methods:
+      - PUT
+
+delete_trucker:
+    path: /truckers/{id}
+    controller: App\Controller\TruckersController::delete
+    methods:
+      - DELETE
+
 new_truck_type:
     path: /truck_types
     controller: App\Controller\TruckTypesController::insert
@@ -43,3 +55,15 @@ get_truck_type:
     controller: App\Controller\TruckTypesController::getOne
     methods:
       - GET
+
+update_truck_type:
+    path: /truck_types/{id}
+    controller: App\Controller\TruckTypesController::update
+    methods:
+      - PUT
+
+delete_truck_type:
+    path: /truck_types/{id}
+    controller: App\Controller\TruckTypesController::delete
+    methods:
+      - DELETE

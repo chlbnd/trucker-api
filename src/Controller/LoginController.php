@@ -34,7 +34,13 @@ class LoginController extends AbstractController
                 'email' => $loginData->email
             ]);
 
-            $this->encoder->isPasswordValid($user, $loginData->password);
+            if (!$user) {
+                throw new \Exception;
+            }
+
+            if (!$this->encoder->isPasswordValid($user, $loginData->password)) {
+                throw new \Exception;
+            }
         } catch(\Exception $e) {
             return new JsonResponse(
                 [

@@ -31,7 +31,7 @@ class TruckTypeFactory implements EntityFactory
         $newTruckTypeData = json_decode($json);
 
         $truckType = new TruckType();
-        $truckType->setName($newTruckerData->name);
+        $truckType->setName($newTruckTypeData->name);
 
         return $truckType;
     }

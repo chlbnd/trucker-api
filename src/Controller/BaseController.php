@@ -7,6 +7,7 @@ use App\Helper\RequestSplitter;
 use App\Helper\ResponseFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,16 +35,23 @@ abstract class BaseController extends AbstractController
      */
     private $requestSplitter;
 
+    /**
+     * @var CacheItemPoolInterface
+     */
+    private $cache;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         ObjectRepository $repository,
         EntityFactory $factory,
-        RequestSplitter $requestSplitter
+        RequestSplitter $requestSplitter,
+        CacheItemPoolInterface $cache
     ) {
         $this->entityManager   = $entityManager;
         $this->repository      = $repository;
         $this->factory         = $factory;
         $this->requestSplitter = $requestSplitter;
+        $this->cache           = $cache;
     }
 
     public function insert(Request $request): Response
@@ -53,6 +61,12 @@ abstract class BaseController extends AbstractController
 
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
+
+            $cacheItem = $this->cache->getItem(
+                $this->getCachePrefix() . $entity->getId()
+            );
+            $cacheItem->set($entity);
+            $this->cache->save($cacheItem);
 
             $responseFactory = new ResponseFactory(
                 [$entity],
@@ -72,7 +86,9 @@ abstract class BaseController extends AbstractController
     }
     public function getOne(int $id): Response
     {
-        $entity = $this->repository->find($id);
+        $entity = $this->cache->hasItem($this->getCachePrefix() . $id)
+            ? $this->cache->getItem($this->getCachePrefix() . $id)->get()
+            : $this->repository->find($id);
 
         if(is_null($entity)) {
             return new Response("", Response::HTTP_NOT_FOUND);
@@ -124,8 +140,12 @@ abstract class BaseController extends AbstractController
 
             $this->entityManager->flush();
 
+            $cacheItem = $this->cache->getItem($this->getCachePrefix() . $id);
+            $cacheItem->set($updatedEntity);
+            $this->cache->save($cacheItem);
+
             $responseFactory = new ResponseFactory(
-                [$entity],
+                [$updatedEntity],
                 true,
                 Response::HTTP_OK
             );
@@ -150,6 +170,8 @@ abstract class BaseController extends AbstractController
 
         $this->entityManager->remove($entity);
         $this->entityManager->flush();
+
+        $this->cache->deleteItem($this->getCachePrefix() . $id);
 
         return new Response("", Response::HTTP_NO_CONTENT);
     }

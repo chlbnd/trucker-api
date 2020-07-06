@@ -4,11 +4,12 @@ namespace App\Controller;
 
 use App\Controller\BaseController;
 use App\Entity\Trucker as TruckerEntity;
-use App\Helper\TruckerFactory;
 use App\Helper\RequestSplitter;
+use App\Helper\TruckerFactory;
 use App\Repository\TruckerRepository;
 use App\Repository\TruckTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 class TruckersController extends BaseController
 {
@@ -22,13 +23,11 @@ class TruckersController extends BaseController
         TruckerRepository $repository,
         TruckerFactory $factory,
         TruckTypeRepository $truckTypeRepository,
-        RequestSplitter $requestSplitter
+        RequestSplitter $requestSplitter,
+        CacheItemPoolInterface $cache
     ) {
         parent::__construct(
-            $entityManager,
-            $repository,
-            $factory,
-            $requestSplitter
+            $entityManager, $repository, $factory, $requestSplitter, $cache
         );
         $this->truckTypeRepository = $truckTypeRepository;
     }
@@ -58,5 +57,10 @@ class TruckersController extends BaseController
             ->setPublisher($truckType);
 
         return $entity;
+    }
+
+    public function getCachePrefix(): string
+    {
+        return 'trucker_';
     }
 }
