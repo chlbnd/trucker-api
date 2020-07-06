@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TrackingRepository::class)
  */
-class Tracking
+class Tracking implements EntityInterface
 {
     /**
      * @ORM\Id()
@@ -140,5 +140,10 @@ class Tracking
         $this->check_out = $check_out;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [];
     }
 }

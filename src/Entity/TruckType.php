@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TruckTypeRepository::class)
  */
-class TruckType implements \JsonSerializable
+class TruckType implements EntityInterface
 {
     /**
      * @ORM\Id()
