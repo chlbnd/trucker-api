@@ -1,0 +1,45 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+login:
+    path: /login
+    controller: App\Controller\LoginController::index
+    methods:
+      - POST
+
+new_trucker:
+    path: /truckers
+    controller: App\Controller\TruckersController::insert
+    methods:
+      - POST
+
+get_truckers:
+    path: /truckers
+    controller: App\Controller\TruckersController::getAll
+    methods:
+      - GET
+
+get_trucker:
+    path: /truckers/{id}
+    controller: App\Controller\TruckersController::getOne
+    methods:
+      - GET
+
+new_truck_type:
+    path: /truck_types
+    controller: App\Controller\TruckTypesController::insert
+    methods:
+      - POST
+
+get_truck_types:
+    path: /truck_types
+    controller: App\Controller\TruckTypesController::getAll
+    methods:
+      - GET
+
+get_truck_type:
+    path: /truck_types/{id}
+    controller: App\Controller\TruckTypesController::getOne
+    methods:
+      - GET
