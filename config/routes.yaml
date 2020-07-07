@@ -26,6 +26,12 @@ get_trucker:
     methods:
       - GET
 
+get_tracking_by_trucker:
+    path: /truckers/{id}/tracking
+    controller: App\Controller\TruckersController::getTracking
+    methods:
+      - GET
+
 update_trucker:
     path: /truckers/{id}
     controller: App\Controller\TruckersController::update
@@ -65,5 +71,35 @@ update_truck_type:
 delete_truck_type:
     path: /truck_types/{id}
     controller: App\Controller\TruckTypesController::delete
+    methods:
+      - DELETE
+
+new_tracking:
+    path: /tracking
+    controller: App\Controller\TrackingController::insert
+    methods:
+      - POST
+
+get_trackings:
+    path: /tracking
+    controller: App\Controller\TrackingController::getAll
+    methods:
+      - GET
+
+get_tracking:
+    path: /tracking/{id}
+    controller: App\Controller\TrackingController::getOne
+    methods:
+      - GET
+
+update_tracking:
+    path: /tracking/{id}
+    controller: App\Controller\TrackingController::update
+    methods:
+      - PUT
+
+delete_tracking:
+    path: /tracking/{id}
+    controller: App\Controller\TrackingController::delete
     methods:
       - DELETE

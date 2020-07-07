@@ -18,30 +18,21 @@ class Tracking implements EntityInterface
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Trucker::class, inversedBy="trackings")
+     * @ORM\ManyToOne(targetEntity=Trucker::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $trucker;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Address::class)
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $from_lat;
+    private $from_address;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Address::class)
      */
-    private $from_lon;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $to_lat;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $to_lon;
+    private $to_address;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -49,7 +40,7 @@ class Tracking implements EntityInterface
     private $check_in;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $check_out;
 
@@ -58,72 +49,12 @@ class Tracking implements EntityInterface
         return $this->id;
     }
 
-    public function getTrucker(): ?Trucker
-    {
-        return $this->trucker;
-    }
-
-    public function setTrucker(?Trucker $trucker): self
-    {
-        $this->trucker = $trucker;
-
-        return $this;
-    }
-
-    public function getFromLat(): ?string
-    {
-        return $this->from_lat;
-    }
-
-    public function setFromLat(string $from_lat): self
-    {
-        $this->from_lat = $from_lat;
-
-        return $this;
-    }
-
-    public function getFromLon(): ?string
-    {
-        return $this->from_lon;
-    }
-
-    public function setFromLon(string $from_lon): self
-    {
-        $this->from_lon = $from_lon;
-
-        return $this;
-    }
-
-    public function getToLat(): ?string
-    {
-        return $this->to_lat;
-    }
-
-    public function setToLat(string $to_lat): self
-    {
-        $this->to_lat = $to_lat;
-
-        return $this;
-    }
-
-    public function getToLon(): ?string
-    {
-        return $this->to_lon;
-    }
-
-    public function setToLon(string $to_lon): self
-    {
-        $this->to_lon = $to_lon;
-
-        return $this;
-    }
-
     public function getCheckIn(): ?string
     {
         return $this->check_in;
     }
 
-    public function setCheckIn(string $check_in): self
+    public function setCheckIn(?string $check_in): self
     {
         $this->check_in = $check_in;
 
@@ -142,8 +73,61 @@ class Tracking implements EntityInterface
         return $this;
     }
 
+    public function getTrucker(): ?Trucker
+    {
+        return $this->trucker;
+    }
+
+    public function setTrucker(?Trucker $trucker): self
+    {
+        $this->trucker = $trucker;
+
+        return $this;
+    }
+
+    public function getFromAddress(): ?Address
+    {
+        return $this->from_address;
+    }
+
+    public function setFromAddress(?Address $from_address): self
+    {
+        $this->from_address = $from_address;
+
+        return $this;
+    }
+
+    public function getToAddress(): ?Address
+    {
+        return $this->to_address;
+    }
+
+    public function setToAddress(?Address $to_address): self
+    {
+        $this->to_address = $to_address;
+
+        return $this;
+    }
+
     public function jsonSerialize()
     {
-        return [];
+        return [
+            'id' => $this->getId(),
+            'trucker_id' => $this->getTrucker()->getId(),
+            'fromAddress' => $this->getFromAddress(),
+            'toAddress' => $this->getToAddress(),
+            'check_in' => $this->getCheckIn(),
+            'check_out' => $this->getCheckOut(),
+            '_links' => [
+                [
+                    'rel' => 'self',
+                    'path' => '/tracking/' . $this->getId()
+                ],
+                [
+                    'rel' => 'trucker',
+                    'path' => '/truckers/' . $this->getTrucker()->getId()
+                ]
+            ]
+        ];
     }
 }

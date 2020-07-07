@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Entity\Trucker as TruckerEntity;
 use App\Helper\RequestSplitter;
 use App\Helper\TruckerFactory;
+use App\Repository\TrackingRepository;
 use App\Repository\TruckerRepository;
 use App\Repository\TruckTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,19 +18,25 @@ class TruckersController extends BaseController
      * @var TruckTypeRepository
      */
     private $truckTypeRepository;
+    /**
+     * @var TrackingRepository
+     */
+    private $trackingRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         TruckerRepository $repository,
         TruckerFactory $factory,
-        TruckTypeRepository $truckTypeRepository,
         RequestSplitter $requestSplitter,
-        CacheItemPoolInterface $cache
+        CacheItemPoolInterface $cache,
+        TruckTypeRepository $truckTypeRepository,
+        TrackingRepository $trackingRepository
     ) {
         parent::__construct(
             $entityManager, $repository, $factory, $requestSplitter, $cache
         );
         $this->truckTypeRepository = $truckTypeRepository;
+        $this->trackingRepository = $trackingRepository;
     }
 
     /**
@@ -51,10 +58,13 @@ class TruckersController extends BaseController
         );
 
         $current
-            ->setTitle($newData->getTitle())
-            ->setAuthor($newData->getAuthor())
-            ->setIsbn($newData->getIsbn())
-            ->setPublisher($truckType);
+            ->setName($newData->getName())
+            ->setBirthdate($newData->getBirthdate())
+            ->setGender($newData->getGender())
+            ->setIsOwner($newData->getIsOwner())
+            ->setCnhType($newData->getCnhType())
+            ->setIsLoaded($newData->getIsLoaded())
+            ->setTruckType($truckType);
 
         return $entity;
     }

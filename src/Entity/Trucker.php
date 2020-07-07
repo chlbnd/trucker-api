@@ -195,7 +195,7 @@ class Trucker implements EntityInterface
             'is_owner' => $this->getIsOwner(),
             'cnh_type' => $this->getCnhType(),
             'is_loaded' => $this->getIsLoaded(),
-            'truck_type' => $this->getTruckType(),
+            'truck_type' => $this->getTruckType()->getId(),
             '_links' => [
                 [
                     'rel' => 'self',
@@ -204,6 +204,10 @@ class Trucker implements EntityInterface
                 [
                     'rel' => 'truck_type',
                     'path' => '/truck_types/' . $this->getTruckType()->getId()
+                ],
+                [
+                    'rel' => 'trackings',
+                    'path' => '/tracking?trucker=' . $this->getId() . '&sort[id]=DESC'
                 ]
             ]
         ];

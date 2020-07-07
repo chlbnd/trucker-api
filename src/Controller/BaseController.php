@@ -82,8 +82,8 @@ abstract class BaseController extends AbstractController
         }
 
         return $responseFactory->getResponse();
-
     }
+
     public function getOne(int $id): Response
     {
         $entity = $this->cache->hasItem($this->getCachePrefix() . $id)
