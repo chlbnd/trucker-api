@@ -40,7 +40,8 @@ Besides that, you can also filter and sort responses as you prefer with query st
 
 # Requests and responses documentation
 ## Login
-### (POST /login) _Request (application/json)_
+### (POST /login)
+_Request (application/json)_
 ```json
 {
     "email": "admin@truckpad.com",
@@ -255,6 +256,8 @@ _Response (200, application/json)_
 _Response (204)_
 
 ## Truck Type
+Valid filters: `?name=Caminhão Toco`
+Valid sortings: `?sort[id,name]={ASC|DESC}
 
 ### (GET /truck_types) Get all the truck types
 _Response (200, application/json)_
@@ -429,4 +432,355 @@ _Response (200, application/json)_
 
 ### (DELETE /track_types/{id}) Delete one track type
 
+_Response (204)_
+
+## Tracking
+Valid filters: `?check_in=YYYY-MM-DD HH:MM&check_out=YYYY-MM-DD HH:MM`
+Valid sortings: `?sort[id,trucker,check_in,check_out]={ASC|DESC}
+
+### (GET /tracking) Get all trackings
+_Response (200, application/json)_
+```json
+{
+    "success": true,
+    "page": 1,
+    "itemsPerPage": 10,
+    "data": [
+        {
+            "id": 1,
+            "trucker_id": 2,
+            "fromAddress": {
+                "id": 1,
+                "street_name": "Rua Santa Barbara",
+                "street_number": "1500",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.439815",
+                "longitude": "-46.519099",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/1"
+                    }
+                ]
+            },
+            "toAddress": {
+                "id": 2,
+                "street_name": "Avenida Santa Barbara",
+                "street_number": "300",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.458217",
+                "longitude": "-46.507477",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/2"
+                    }
+                ]
+            },
+            "check_in": "2020-01-01 01:01",
+            "check_out": "2020-01-01 02:02",
+            "_links": [
+                {
+                    "rel": "self",
+                    "path": "/tracking/1"
+                },
+                {
+                    "rel": "trucker",
+                    "path": "/truckers/2"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "trucker_id": 2,
+            "fromAddress": {
+                "id": 1,
+                "street_name": "Rua Santa Barbara",
+                "street_number": "1500",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.439815",
+                "longitude": "-46.519099",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/1"
+                    }
+                ]
+            },
+            "toAddress": {
+                "id": 2,
+                "street_name": "Avenida Santa Barbara",
+                "street_number": "300",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.458217",
+                "longitude": "-46.507477",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/2"
+                    }
+                ]
+            },
+            "check_in": "2020-01-01 01:01",
+            "check_out": "2020-01-01 02:02",
+            "_links": [
+                {
+                    "rel": "self",
+                    "path": "/tracking/2"
+                },
+                {
+                    "rel": "trucker",
+                    "path": "/truckers/2"
+                }
+            ]
+        }
+    ]
+}
+```
+
+### (GET /tracking/{id}) Get one tracking
+_Response (200, application/json)_
+```json
+{
+    "success": true,
+    "page": 1,
+    "itemsPerPage": null,
+    "data": [
+        {
+            "id": 1,
+            "trucker_id": 2,
+            "fromAddress": {
+                "id": 1,
+                "street_name": "Rua Santa Barbara",
+                "street_number": "1500",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.439815",
+                "longitude": "-46.519099",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/1"
+                    }
+                ]
+            },
+            "toAddress": {
+                "id": 2,
+                "street_name": "Avenida Santa Barbara",
+                "street_number": "300",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.458217",
+                "longitude": "-46.507477",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/2"
+                    }
+                ]
+            },
+            "check_in": "2020-01-01 01:01",
+            "check_out": "2020-01-01 02:02",
+            "_links": [
+                {
+                    "rel": "self",
+                    "path": "/tracking/1"
+                },
+                {
+                    "rel": "trucker",
+                    "path": "/truckers/2"
+                }
+            ]
+        }
+    ]
+}
+```
+### (POST /tracking) Insert one tracking
+_Request (application/json)_
+```json
+{
+    "trucker_id": 2,
+    "from": {
+        "street_name": "Rua Santa Barbara",
+        "street_number": "1500",
+        "neighborhood": "Jardim Santa Barbara",
+        "zip_code": "07191310",
+        "city": "Guarulhos",
+        "state": "SP"
+    },
+    "to": {
+        "street_name": "Avenida Santa Barbara",
+        "street_number": "300",
+        "neighborhood": "Jardim Santa Barbara",
+        "zip_code": "07191310",
+        "city": "Guarulhos",
+        "state": "SP"
+    },
+    "check_in": "2020-01-01 01:01",
+    "check_out": "2020-01-01 02:02"
+}
+```
+_Response (200, application/json)_
+```json
+{
+    "success": true,
+    "page": 1,
+    "itemsPerPage": null,
+    "data": [
+        {
+            "id": 3,
+            "trucker_id": 2,
+            "fromAddress": {
+                "id": 1,
+                "street_name": "Rua Santa Barbara",
+                "street_number": "1500",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.439815",
+                "longitude": "-46.519099",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/1"
+                    }
+                ]
+            },
+            "toAddress": {
+                "id": 2,
+                "street_name": "Avenida Santa Barbara",
+                "street_number": "300",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.458217",
+                "longitude": "-46.507477",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/2"
+                    }
+                ]
+            },
+            "check_in": "2020-01-01 01:01",
+            "check_out": "2020-01-01 02:02",
+            "_links": [
+                {
+                    "rel": "self",
+                    "path": "/tracking/3"
+                },
+                {
+                    "rel": "trucker",
+                    "path": "/truckers/2"
+                }
+            ]
+        }
+    ]
+}
+```
+### (PUT /tracking/{id}) Update one tracking
+_Request (application/json)_
+```json
+{
+    "trucker_id": 2,
+    "from": {
+        "street_name": "Avenida Santa Barbara",
+        "street_number": "123",
+        "neighborhood": "Jardim Santa Barbara",
+        "zip_code": "07191310",
+        "city": "Guarulhos",
+        "state": "SP"
+    },
+    "to": {
+        "street_name": "Avenida Santa Barbara",
+        "street_number": "8001",
+        "neighborhood": "Jardim Santa Barbara",
+        "zip_code": "07191310",
+        "city": "Guarulhos",
+        "state": "SP"
+    },
+    "check_in": "2020-01-01 01:01",
+    "check_out": "2020-01-01 02:02"
+}
+```
+_Response (200, application/json)_
+```json
+{
+    "success": true,
+    "page": 1,
+    "itemsPerPage": null,
+    "data": [
+        {
+            "id": 3,
+            "trucker_id": 2,
+            "fromAddress": {
+                "id": 3,
+                "street_name": "Avenida Santa Barbara",
+                "street_number": "123",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.458217",
+                "longitude": "-46.507477",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/3"
+                    }
+                ]
+            },
+            "toAddress": {
+                "id": 4,
+                "street_name": "Avenida Santa Barbara",
+                "street_number": "8001",
+                "neighborhood": "Jardim Santa Barbara",
+                "city": "Guarulhos",
+                "state": "SP",
+                "zip_code": "07191310",
+                "latitude": "-23.458217",
+                "longitude": "-46.507477",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "path": "/address/4"
+                    }
+                ]
+            },
+            "check_in": "2020-01-01 01:01",
+            "check_out": "2020-01-01 02:02",
+            "_links": [
+                {
+                    "rel": "self",
+                    "path": "/tracking/3"
+                },
+                {
+                    "rel": "trucker",
+                    "path": "/truckers/2"
+                }
+            ]
+        }
+    ]
+}
+```
+
+### (DELETE /tracking/{id}) Delete one tracking
 _Response (204)_
