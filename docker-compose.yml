@@ -1,9 +1,42 @@
 version: '3.5'
 
 services:
-  mysql:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - .:/var/www/
+    ports:
+      - 8001:80
+    depends_on:
+      - php
+    networks:
+      - trucker-api
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile-php
+    environment:
+      APP_ENV: dev
+    volumes:
+      - ./:/var/www/
+    depends_on:
+      - db
+    networks:
+      - trucker-api
+
+  db:
     image: mysql:5.7
     ports:
       - '3306:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - trucker-api
+
+
+networks:
+  trucker-api:
+    driver: bridge

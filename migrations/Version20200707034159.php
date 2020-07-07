@@ -113,6 +113,21 @@ final class Version20200707034159 extends AbstractMigration
             ADD CONSTRAINT FK_39031BED2FDA3C7
             FOREIGN KEY (truck_type_id)
             REFERENCES truck_type (id)');
+
+        $truckTypes = [
+            ['id' => 1, 'name' => 'Caminhão 3/4'],
+            ['id' => 2, 'name' => 'Caminhão Toco'],
+            ['id' => 3, 'name' => 'Caminhão Truck'],
+            ['id' => 4, 'name' => 'Carreta Simples'],
+            ['id' => 5, 'name' => 'Carreta Eixo Estendido']
+        ];
+
+        foreach ($truckTypes as $truck) {
+            $this->addSql(
+                'INSERT INTO truck_type(id, name)
+                VALUES(:id, :name)', $truck
+            );
+        }
     }
 
     public function down(Schema $schema) : void
