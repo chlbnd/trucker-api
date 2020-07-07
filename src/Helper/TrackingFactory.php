@@ -3,8 +3,8 @@
 namespace App\Helper;
 
 use App\Entity\Address;
-use App\Entity\Tracking;
 use App\Helper\EntityFactory;
+use App\Entity\Tracking;
 use App\Repository\AddressRepository;
 use App\Repository\TruckerRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,9 +33,9 @@ class TrackingFactory implements EntityFactory
      * @var AddressRepository $addressRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         TruckerRepository $truckerRepository,
-        AddressRepository $addressRepository,
-        EntityManagerInterface $entityManager
+        AddressRepository $addressRepository
     ) {
         $this->entityManager = $entityManager;
         $this->truckerRepository = $truckerRepository;
@@ -50,6 +50,10 @@ class TrackingFactory implements EntityFactory
     {
         $newTrackingData = json_decode($json);
         $trucker = $this->truckerRepository->find($newTrackingData->trucker_id);
+
+        if(!$trucker) {
+            throw new \Exception;
+        }
 
         $fromAddress = $this->getAddress($newTrackingData->from);
 
@@ -72,30 +76,37 @@ class TrackingFactory implements EntityFactory
         return $tracking;
     }
 
-    public function getAddress($addressData)
+    public function getAddress($newAddress)
     {
-        $addressData->street_number . ', '
-            . $addressData->street_name . ', '
-            . $addressData->neighborhood . ', '
-            . $addressData->city . ', '
-            . $addressData->state . ', '
-            . $addressData->zip_code;
+        $addressData = [
+            'street_number' => $newAddress->street_number,
+            'street_name'   => $newAddress->street_name,
+            'neighborhood'  => $newAddress->neighborhood,
+            'city'          => $newAddress->city,
+            'state'         => $newAddress->state,
+            'zip_code'      => $newAddress->zip_code
+        ];
 
         $options = [
             CURLOPT_CONNECTTIMEOUT => 2, 
             CURLOPT_SSL_VERIFYPEER => false,
         ];
 
-        $address = $this->addressRepository->findOneBy(
-            (array)$addressData
-        );
+        $address = $this->addressRepository->findOneBy($addressData);
 
         if(!$address){
             $adapter  = new Client(null, null, $options);
             $geocoder = new LocationIQ($adapter, $_ENV['LOCATION_IQ']);
 
             $coordinates = $geocoder
-                ->geocodeQuery(GeocodeQuery::create($fromAddress))
+                ->geocodeQuery(GeocodeQuery::create(
+                    $newAddress->street_number . ', '
+                    . $newAddress->street_name . ', '
+                    . $newAddress->neighborhood . ', '
+                    . $newAddress->city . ', '
+                    . $newAddress->state . ', '
+                    . $newAddress->zip_code
+                ))
                 ->first()
                 ->getCoordinates();
 
@@ -104,16 +115,16 @@ class TrackingFactory implements EntityFactory
 
             $address = new Address();
             $address
-                ->setStreetName($newTrackingData->from->street_name)
-                ->setStreetNumber($newTrackingData->from->street_number)
-                ->setNeighborhood($newTrackingData->from->neighborhood)
-                ->setZipCode($newTrackingData->from->zip_code)
-                ->setCity($newTrackingData->from->city)
-                ->setState($newTrackingData->from->state)
-                ->setLatitude($fromLatitude)
-                ->setLongitude($fromLongitude);
+                ->setStreetName($newAddress->street_name)
+                ->setStreetNumber($newAddress->street_number)
+                ->setNeighborhood($newAddress->neighborhood)
+                ->setZipCode($newAddress->zip_code)
+                ->setCity($newAddress->city)
+                ->setState($newAddress->state)
+                ->setLatitude($latitude)
+                ->setLongitude($longitude);
 
-            $this->entityManager->persist($fromAddress);
+            $this->entityManager->persist($address);
             $this->entityManager->flush();
         }
 

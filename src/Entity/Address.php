@@ -168,6 +168,8 @@ class Address implements EntityInterface
             'city' => $this->getCity(),
             'state' => $this->getState(),
             'zip_code' => $this->getZipCode(),
+            'latitude' => $this->getLatitude(),
+            'longitude' => $this->getLongitude(),
             '_links' => [
                 [
                     'rel' => 'self',

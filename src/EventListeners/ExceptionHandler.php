@@ -18,10 +18,10 @@ class ExceptionHandler implements EventSubscriberInterface
 
     public function handleExceptions(ExceptionEvent $event)
     {
-        $response = ResponseFactory::fromError(
-            $event->getThrowable()
-        );
-
-        $event->setResponse($response->getResponse());
+//        $response = ResponseFactory::fromError(
+//            $event->getThrowable()
+//        );
+//
+//        $event->setResponse($response->getResponse());
     }
 }

@@ -26,7 +26,7 @@ class RequestSplitter
 
         $itemsPerPage = array_key_exists('itemsPerPage', $queryString)
             ? $queryString['itemsPerPage']
-            : 5;
+            : 10;
         unset($queryString['itemsPerPage']);
 
         $filters = $queryString;

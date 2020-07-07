@@ -2,9 +2,9 @@
 
 namespace App\Helper;
 
+use App\Helper\EntityFactory;
 use App\Entity\TruckType;
 use App\Repository\TruckTypeRepository;
-use App\Helper\EntityFactory;
 
 class TruckTypeFactory implements EntityFactory
 {
@@ -20,7 +20,6 @@ class TruckTypeFactory implements EntityFactory
     {
         $this->repository = $repository;
     }
-
 
     /**
      * @param  string $json

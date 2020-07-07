@@ -53,6 +53,10 @@ class TruckType implements EntityInterface
                 [
                     'rel' => 'self',
                     'path' => '/truck_types/' . $this->getId()
+                ],
+                [
+                    'rel' => 'truckers',
+                    'path' => '/truckers?truck_type=' . $this->getId()
                 ]
             ]
         ];

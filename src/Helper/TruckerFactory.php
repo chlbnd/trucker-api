@@ -2,14 +2,14 @@
 
 namespace App\Helper;
 
-use App\Entity\Trucker;
 use App\Helper\EntityFactory;
+use App\Entity\Trucker as TruckerEntity;
 use App\Repository\TruckTypeRepository;
 
 class TruckerFactory implements EntityFactory
 {
     /**
-     * @var PublisherRepository
+     * @var TruckTypeRepository
      */
     private $repository;
 
@@ -24,14 +24,16 @@ class TruckerFactory implements EntityFactory
 
     /**
      * @param  string $json
-     * @return Trucker
+     * @return TruckerEntity|null
      */
-    public function create(string $json)
+    public function create(string $json): ?TruckerEntity
     {
         $newTruckerData = json_decode($json);
-        $truckType = $this->repository->find($newTruckerData->truck_type_id);
+        $truckType = $this->repository->find(
+            $newTruckerData->truck_type_id
+        );
 
-        $trucker = new Trucker();
+        $trucker = new TruckerEntity();
         $trucker
             ->setName($newTruckerData->name)
             ->setBirthdate($newTruckerData->birthdate)
