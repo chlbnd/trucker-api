@@ -56,7 +56,8 @@ _Response (200, application/json)_
 ```
 ## Truckers
 Valid filters: `?name=Name&birthdate=YYYY-MM-DD&gender=O&is_owner={0|1}&cnh_type=E&is_loaded={0|1}&truck_type=1`
-Valid sortings: `?sort[fieldName]={ASC|DESC}
+
+Valid sortings: `?sort[fieldName]={ASC|DESC}`
 
 ### (GET /truckers) Get all truckers
 _Response (200, application/json)_
@@ -257,7 +258,8 @@ _Response (204)_
 
 ## Truck Type
 Valid filters: `?name=Caminhão Toco`
-Valid sortings: `?sort[id,name]={ASC|DESC}
+
+Valid sortings: `?sort[id,name]={ASC|DESC}`
 
 ### (GET /truck_types) Get all the truck types
 _Response (200, application/json)_
@@ -436,7 +438,8 @@ _Response (204)_
 
 ## Tracking
 Valid filters: `?check_in=YYYY-MM-DD HH:MM&check_out=YYYY-MM-DD HH:MM`
-Valid sortings: `?sort[id,trucker,check_in,check_out]={ASC|DESC}
+
+Valid sortings: `?sort[id,trucker,check_in,check_out]={ASC|DESC}`
 
 ### (GET /tracking) Get all trackings
 _Response (200, application/json)_
