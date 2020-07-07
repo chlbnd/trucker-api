@@ -21,7 +21,6 @@ class TruckerFactory implements EntityFactory
         $this->repository = $repository;
     }
 
-
     /**
      * @param  string $json
      * @return TruckerEntity|null

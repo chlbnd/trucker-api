@@ -37,7 +37,6 @@ abstract class BaseController extends AbstractController
 
             $response = $this->getSuccessResponse($entity);
         } catch (\Exception $e) {
-            dump($e);
             $response = $this->getFailResponse();
         }
 

@@ -26,12 +26,6 @@ get_trucker:
     methods:
       - GET
 
-get_tracking_by_trucker:
-    path: /truckers/{id}/tracking
-    controller: App\Controller\TruckersController::getTracking
-    methods:
-      - GET
-
 update_trucker:
     path: /truckers/{id}
     controller: App\Controller\TruckersController::update
