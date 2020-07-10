@@ -661,26 +661,56 @@ _Response (200, application/json)_
     "page": 1,
     "itemsPerPage": null,
     "data": [
-        [
-            {
-                "1": {
-                    "truckTypeName": "Caminhão 3/4",
-                    "trackings": []
-                }
-            },
-            {
-                "2": {
-                    "truckTypeName": "Caminhão Toco",
-                    "trackings": []
-                },
+        {
+            "1": {
+                "truckTypeName": "Caminhão 3/4",
                 "trackings": [
                     {
-                        "tracking": {
+                        "id": 1,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/1"
+                        },
+                        "from": {
                             "id": 1,
-                            "_links": {
-                                "rel": "self",
-                                "path": "/tracking/1"
-                            }
+                            "street_name": "Rua Santa Barbara",
+                            "street_number": "1500",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.439815",
+                            "longitude": "-46.519099",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/1"
+                                }
+                            ]
+                        },
+                        "to": {
+                            "id": 2,
+                            "street_name": "Avenida Santa Barbara",
+                            "street_number": "300",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.458217",
+                            "longitude": "-46.507477",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/2"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/2"
                         },
                         "from": {
                             "id": 1,
@@ -719,70 +749,18 @@ _Response (200, application/json)_
                     }
                 ]
             },
-            {
-                "3": {
-                    "truckTypeName": "Caminhão Truck",
-                    "trackings": []
-                },
-                "trackings": [
-                    {
-                        "tracking": {
-                            "id": 2,
-                            "_links": {
-                                "rel": "self",
-                                "path": "/tracking/2"
-                            }
-                        },
-                        "from": {
-                            "id": 1,
-                            "street_name": "Rua Santa Barbara",
-                            "street_number": "1500",
-                            "neighborhood": "Jardim Santa Barbara",
-                            "city": "Guarulhos",
-                            "state": "SP",
-                            "zip_code": "07191310",
-                            "latitude": "-23.439815",
-                            "longitude": "-46.519099",
-                            "_links": [
-                                {
-                                    "rel": "self",
-                                    "path": "/address/1"
-                                }
-                            ]
-                        },
-                        "to": {
-                            "id": 2,
-                            "street_name": "Avenida Santa Barbara",
-                            "street_number": "300",
-                            "neighborhood": "Jardim Santa Barbara",
-                            "city": "Guarulhos",
-                            "state": "SP",
-                            "zip_code": "07191310",
-                            "latitude": "-23.458217",
-                            "longitude": "-46.507477",
-                            "_links": [
-                                {
-                                    "rel": "self",
-                                    "path": "/address/2"
-                                }
-                            ]
-                        }
-                    }
-                ]
+            "2": {
+                "truckTypeName": "Caminhão Toco",
+                "trackings": []
             },
-            {
-                "4": {
-                    "truckTypeName": "Carreta Simples",
-                    "trackings": []
-                },
+            "3": {
+                "truckTypeName": "Caminhão Truck",
                 "trackings": [
                     {
-                        "tracking": {
-                            "id": 3,
-                            "_links": {
-                                "rel": "self",
-                                "path": "/tracking/3"
-                            }
+                        "id": 3,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/3"
                         },
                         "from": {
                             "id": 3,
@@ -821,19 +799,14 @@ _Response (200, application/json)_
                     }
                 ]
             },
-            {
-                "5": {
-                    "truckTypeName": "Carreta Eixo Estendido",
-                    "trackings": []
-                },
+            "4": {
+                "truckTypeName": "Carreta Simples",
                 "trackings": [
                     {
-                        "tracking": {
-                            "id": 4,
-                            "_links": {
-                                "rel": "self",
-                                "path": "/tracking/4"
-                            }
+                        "id": 4,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/4"
                         },
                         "from": {
                             "id": 5,
@@ -871,8 +844,12 @@ _Response (200, application/json)_
                         }
                     }
                 ]
+            },
+            "5": {
+                "truckTypeName": "Carreta Eixo Estendido",
+                "trackings": []
             }
-        ]
+        }
     ]
 }
 ```
