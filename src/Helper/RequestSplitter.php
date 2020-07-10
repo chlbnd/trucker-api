@@ -38,37 +38,4 @@ class RequestSplitter
             'itemsPerPage' => $itemsPerPage
         ];
     }
-
-    /**
-     * @param  Response  $response  The response
-     * @return array|null
-     */
-    public function getSorting(Response $response): ?array
-    {
-        $queryString = $this->splitData($response);
-        return $queryString['sort'];
-    }
-
-    /**
-     * @param  Response  $response  The response
-     * @return array|null
-     */
-    public function getFilters(Response $response): ?array
-    {
-        $queryString = $this->splitData($response);
-        return $queryString['filters'];
-    }
-
-    /**
-     * @param  Response  $response  The response
-     * @return array|null
-     */
-    public function getPagination(Response $response): ?array
-    {
-        $queryString = $this->splitData($response);
-        return [
-            $queryString['currentPage'],
-            $queryString['itemsPerPage']
-        ];
-    }
 }

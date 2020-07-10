@@ -37,7 +37,7 @@ abstract class BaseController extends AbstractController
 
             $response = $this->getSuccessResponse($entity);
         } catch (\Exception $e) {
-            $response = $this->getFailResponse();
+            $response = $this->getFailResponse($e);
         }
 
         return $response->getResponse();
@@ -59,19 +59,24 @@ abstract class BaseController extends AbstractController
     public function getAll(Request $request): Response
     {
         $params = $this->requestSplitter->splitData($request);
-        $offset = ($params['currentPage'] - 1) * $params['itemsPerPage'];
 
-        $entityList = $this->service->getEntityList($params, $offset);
+        try {
+            $offset = ($params['currentPage'] - 1) * $params['itemsPerPage'];
+            $entityList = $this->service->getEntityList($params, $offset);
 
-        $response = new ResponseFactory(
-            $entityList,
-            true,
-            Response::HTTP_OK,
-            $params['currentPage'],
-            $params['itemsPerPage']
-        );
+            $response = new ResponseFactory(
+                $entityList,
+                true,
+                Response::HTTP_OK,
+                $params['currentPage'],
+                $params['itemsPerPage']
+            );
 
-        return $response->getResponse();
+            return $response->getResponse();
+        } catch(\Exception $e) {
+            $response = $this->getFailResponse($e);
+            return $response->getResponse();
+        }
     }
 
     public function update(int $id, Request $request): Response
@@ -80,10 +85,9 @@ abstract class BaseController extends AbstractController
 
         try {
             $updatedEntity = $this->service->entityUpdate($updateData, $id);
-
             $response = $this->getSuccessResponse($updatedEntity);
         } catch (\Exception $e){
-            $response = $this->getFailResponse();
+            $response = $this->getFailResponse($e);
         }
 
         return $response->getResponse();
@@ -99,7 +103,7 @@ abstract class BaseController extends AbstractController
         return new Response("", Response::HTTP_NO_CONTENT);
     }
 
-    private function getSuccessResponse($entity)
+    public function getSuccessResponse($entity)
     {
         $response = new ResponseFactory(
             [
@@ -112,11 +116,11 @@ abstract class BaseController extends AbstractController
         return $response;
     }
 
-    private function getFailResponse()
+    public function getFailResponse(\Exception $e)
     {
         $response = new ResponseFactory(
             [
-                "Check given info"
+                $e->getMessage()
             ],
             false,
             Response::HTTP_BAD_REQUEST

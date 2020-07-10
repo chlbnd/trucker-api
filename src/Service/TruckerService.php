@@ -44,6 +44,14 @@ class TruckerService extends AbstractService
      */
     private $trackingRepository;
 
+    /**
+     * @param   EntityManagerInterface $entityManager
+     * @param   ObjectRepository       $repository
+     * @param   EntityFactory          $factory
+     * @param   CacheItemPoolInterface $cache
+     * @param   TruckTypeRepository    $truckTypeRepository
+     * @param   TrackingRepository     $trackingRepository
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         TruckerRepository $repository,
@@ -87,6 +95,9 @@ class TruckerService extends AbstractService
         return $current;
     }
 
+    /**
+     * @return  string
+     */
     public function getCachePrefix(): string
     {
         return 'trucker_';

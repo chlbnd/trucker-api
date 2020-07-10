@@ -30,6 +30,12 @@ abstract class AbstractService
      */
     private $cache;
 
+    /**
+     * @param   EntityManagerInterface $entityManager
+     * @param   ObjectRepository       $repository
+     * @param   EntityFactory          $factory
+     * @param   CacheItemPoolInterface $cache
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         ObjectRepository $repository,
@@ -123,6 +129,14 @@ abstract class AbstractService
         $this->entityManager->flush();
 
         $this->cache->deleteItem($this->getCachePrefix() . $id);
+    }
+
+    /**
+     * @return ObjectRepository
+     */
+    public function getRepository(): ObjectRepository
+    {
+        return $this->repository;
     }
 
     /**

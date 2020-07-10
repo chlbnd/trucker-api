@@ -80,6 +80,24 @@ get_trackings:
     methods:
       - GET
 
+get_recent_trackings:
+    path: /tracking/check_in/recent
+    controller: App\Controller\TrackingController::getRecent
+    methods:
+      - GET
+
+get_trackings_by_check_in:
+    path: /tracking/check_in
+    controller: App\Controller\TrackingController::getByCheckIn
+    methods:
+      - GET
+
+get_trackings_by_truck_types:
+    path: /tracking/truck_types
+    controller: App\Controller\TrackingController::getByTruckType
+    methods:
+      - GET
+
 get_tracking:
     path: /tracking/{id}
     controller: App\Controller\TrackingController::getOne

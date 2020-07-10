@@ -30,6 +30,12 @@ class TruckTypeService extends AbstractService
      */
     private $cache;
 
+    /**
+     * @param   EntityManagerInterface $entityManager
+     * @param   ObjectRepository       $repository
+     * @param   EntityFactory          $factory
+     * @param   CacheItemPoolInterface $cache
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         TruckTypeRepository $repository,
@@ -53,6 +59,9 @@ class TruckTypeService extends AbstractService
         return $current;
     }
 
+    /**
+     * @return  string
+     */
     public function getCachePrefix(): string
     {
         return 'trucktype_';
