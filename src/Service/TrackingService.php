@@ -109,12 +109,12 @@ class TrackingService extends AbstractService
             : true;
 
         $since = isset($filters['since'])
-            ? new \DateTime($filters['since'])
+            ? $this->getDate($filters['since'])
             : null;
 
         $until = isset($filters['until'])
-            ? new \DateTime($filters['until'] . '23:59:59')
-            : new \DateTime('now');
+            ? $this->getDate($filters['until'] . '23:59:59')
+            : $this->getDate('today' . '23:59:59');
 
         $entityList = $this->getRepository()->findCheckInByDateRange(
             $isLoaded, $recentFirst, $until, $since
@@ -134,10 +134,10 @@ class TrackingService extends AbstractService
         )
             ? $queryString['filters']['days'] - 1
             : 0;
-        $now = new \DateTime("now");
+        $today = $this->getDate('today');
 
-        $queryString['filters']['until'] = $now->format('Y-m-d');
-        $queryString['filters']['since'] = $now
+        $queryString['filters']['until'] = $today->format('Y-m-d');
+        $queryString['filters']['since'] = $today
             ->modify('-' . $days . ' days')
             ->format('Y-m-d');
 
@@ -147,18 +147,16 @@ class TrackingService extends AbstractService
     }
 
     /**
-     * @return  array
+     * @return array
      */
     public function listAddressesByTruckType(): array
     {
         $truckTypes = $this->truckTypeRepository->findAll();
 
         foreach ($truckTypes as $truckType) {
-            $result[] = [
-                $truckType->getId() => [
-                    'truckTypeName' => $truckType->getName(),
-                    'trackings' => []
-                ]
+            $result[$truckType->getId()] = [
+                'truckTypeName' => $truckType->getName(),
+                'trackings' => []
             ];
         }
 
@@ -168,12 +166,10 @@ class TrackingService extends AbstractService
             $truckTypeId = $tracking->getTrucker()->getTruckType()->getId();
 
             $result[$truckTypeId]['trackings'][] = [
-                'tracking' => [
-                    'id' => $tracking->getId(),
-                    '_links' => [
-                        'rel' => 'self',
-                        'path' => '/tracking/' . $tracking->getId()
-                    ]
+                'id' => $tracking->getId(),
+                '_links' => [
+                    'rel' => 'self',
+                    'path' => '/tracking/' . $tracking->getId()
                 ],
                 'from' => $tracking->getFromAddress(),
                 'to' => $tracking->getToAddress(),
@@ -189,5 +185,13 @@ class TrackingService extends AbstractService
     public function getCachePrefix(): string
     {
         return 'tracking_';
+    }
+
+    /**
+     * @return string
+     */
+    private function getDate(string $date): \DateTime
+    {
+        return new \DateTime($date);
     }
 }

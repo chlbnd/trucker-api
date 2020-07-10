@@ -73,13 +73,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('App\Repository\TrackingRepository');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $actual = $service->createEntity($tracking);
@@ -112,13 +115,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('Psr\Cache\CacheItemPoolInterface');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $service->createEntity($tracking);
@@ -162,13 +168,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('App\Helper\TrackingFactory');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $actual = $service->getEntity($id);
@@ -209,13 +218,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('App\Helper\TrackingFactory');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $actual = $service->getEntity($id);
@@ -256,13 +268,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('App\Helper\TrackingFactory');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $actual = $service->getEntity($id);
@@ -302,13 +317,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('Psr\Cache\CacheItemPoolInterface');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $actual = $service->getEntityList($params, $offset);
@@ -348,13 +366,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('Psr\Cache\CacheItemPoolInterface');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $actual = $service->getEntityList($params, $offset);
@@ -488,13 +509,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('App\Repository\TrackingRepository');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $actual = $service->entityUpdate($tracking, $id);
@@ -551,15 +575,17 @@ class TrackingServiceTest extends TestCase
             ->createMock('Psr\Cache\CacheItemPoolInterface');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
-
         $service->entityUpdate($tracking, 1);
     }
 
@@ -594,13 +620,16 @@ class TrackingServiceTest extends TestCase
             ->createMock('App\Helper\TrackingFactory');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $service->deleteEntity($id);
@@ -633,15 +662,266 @@ class TrackingServiceTest extends TestCase
             ->createMock('Psr\Cache\CacheItemPoolInterface');
         $truckerRepository = $this
             ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
 
         $service = new TrackingService(
             $entityManager,
             $repository,
             $factory,
             $cache,
-            $truckerRepository
+            $truckerRepository,
+            $truckTypeRepository
         );
 
         $service->deleteEntity($id);
+    }
+
+    /**
+     * @covers TrackingService
+     */
+    public function testCheckInByDateRangeWithoutFiltersSuccess()
+    {
+        $isLoaded = true;
+        $recentFirst = true;
+        $since = '2020-01-01';
+        $until = '2020-12-01';
+
+        $params = [
+            'filters' => []
+        ];
+
+        $entity = $this
+            ->createMock('App\Entity\Tracking');
+
+        $repository = $this
+            ->createMock('App\Repository\TrackingRepository');
+        $repository
+            ->expects($this->once())
+            ->method('findCheckInByDateRange')
+            ->with(
+                true,
+                true,
+                new \DateTime('today' . '23:59:59'),
+                null
+            )
+            ->willReturn([$entity]);
+
+        $entityManager = $this
+            ->createMock('Doctrine\ORM\EntityManagerInterface');
+        $factory = $this
+            ->createMock('App\Helper\TrackingFactory');
+        $cache = $this
+            ->createMock('Psr\Cache\CacheItemPoolInterface');
+        $truckerRepository = $this
+            ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
+
+        $service = new TrackingService(
+            $entityManager,
+            $repository,
+            $factory,
+            $cache,
+            $truckerRepository,
+            $truckTypeRepository
+        );
+
+        $service->listCheckInByDateRange($params);
+    }
+
+    /**
+     * @covers TrackingService
+     */
+    public function testCheckInByDateRangeSuccess()
+    {
+        $isLoaded = true;
+        $recentFirst = true;
+        $since = '2020-01-01';
+        $until = '2020-12-01';
+
+        $params = [
+            'filters' => [
+                'is_loaded'    => true,
+                'recent_first' => true,
+                'since'        => '2020-01-01',
+                'until'        => '2020-12-01'
+            ]
+        ];
+
+        $entity = $this
+            ->createMock('App\Entity\Tracking');
+
+        $repository = $this
+            ->createMock('App\Repository\TrackingRepository');
+        $repository
+            ->expects($this->once())
+            ->method('findCheckInByDateRange')
+            ->with(
+                true,
+                true,
+                new \DateTime($until . '23:59:59'),
+                new \DateTime($since)
+            )
+            ->willReturn([$entity]);
+
+        $entityManager = $this
+            ->createMock('Doctrine\ORM\EntityManagerInterface');
+        $factory = $this
+            ->createMock('App\Helper\TrackingFactory');
+        $cache = $this
+            ->createMock('Psr\Cache\CacheItemPoolInterface');
+        $truckerRepository = $this
+            ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
+
+        $service = new TrackingService(
+            $entityManager,
+            $repository,
+            $factory,
+            $cache,
+            $truckerRepository,
+            $truckTypeRepository
+        );
+
+        $service->listCheckInByDateRange($params);
+    }
+
+    /**
+     * @covers TrackingService
+     */
+    public function testDaysToDateRangeSuccess()
+    {
+        $days = 1;
+        $isLoaded = true;
+        $recentFirst = true;
+
+        $params = [
+            'filters' => [
+                'days'         => 1,
+                'is_loaded'    => true,
+                'recent_first' => true
+            ]
+        ];
+
+        $entityManager = $this
+            ->createMock('Doctrine\ORM\EntityManagerInterface');
+        $repository = $this
+            ->createMock('App\Repository\TrackingRepository');
+        $factory = $this
+            ->createMock('App\Helper\TrackingFactory');
+        $cache = $this
+            ->createMock('Psr\Cache\CacheItemPoolInterface');
+        $truckerRepository = $this
+            ->createMock('App\Repository\TruckerRepository');
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
+
+        $service = new TrackingService(
+            $entityManager,
+            $repository,
+            $factory,
+            $cache,
+            $truckerRepository,
+            $truckTypeRepository
+        );
+
+        $actual = $service->daysToDateRange($params);
+        $expected = [
+            'filters' => [
+                'since' => (new \DateTime('today'))->format('Y-m-d'),
+                'until' => (new \DateTime('today'))->format('Y-m-d'),
+                'is_loaded' => $isLoaded,
+                'recent_first' => $recentFirst
+            ]
+        ];
+
+        $this->assertEquals($actual, $expected);
+    }
+
+    /**
+     * @covers TrackingService
+     */
+    public function testListAddressesByTruckTypeSuccess()
+    {
+        $days = 1;
+        $isLoaded = true;
+        $recentFirst = true;
+
+        $truckTypeEntity = $this
+            ->createMock('App\Entity\TruckType');
+        $truckTypeEntity
+            ->expects($this->exactly(2))
+            ->method('getId')
+            ->willReturn(1);
+        $truckTypeEntity
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn('Truck');
+
+        $truckTypeRepository = $this
+            ->createMock('App\Repository\TruckTypeRepository');
+        $truckTypeRepository
+            ->expects($this->once())
+            ->method('findAll')
+            ->willReturn([$truckTypeEntity]);
+
+        $truckerEntity = $this
+            ->createMock('App\Entity\Trucker');
+        $truckerEntity
+            ->expects($this->once())
+            ->method('getTruckType')
+            ->willReturn($truckTypeEntity);
+
+        $addressEntity = $this
+            ->createMock('App\Entity\Address');
+
+        $entity = $this
+            ->createMock('App\Entity\Tracking');
+        $entity
+            ->expects($this->once())
+            ->method('getTrucker')
+            ->willReturn($truckerEntity);
+        $entity
+            ->expects($this->exactly(2))
+            ->method('getId')
+            ->willReturn(1);
+        $entity
+            ->expects($this->once())
+            ->method('getFromAddress')
+            ->willReturn($addressEntity);
+        $entity
+            ->expects($this->once())
+            ->method('getToAddress')
+            ->willReturn($addressEntity);
+
+        $repository = $this
+            ->createMock('App\Repository\TrackingRepository');
+        $repository
+            ->expects($this->once())
+            ->method('findAll')
+            ->willReturn([$entity]);
+
+
+        $entityManager = $this
+            ->createMock('Doctrine\ORM\EntityManagerInterface');
+        $factory = $this
+            ->createMock('App\Helper\TrackingFactory');
+        $cache = $this
+            ->createMock('Psr\Cache\CacheItemPoolInterface');
+        $truckerRepository = $this
+            ->createMock('App\Repository\TruckerRepository');
+
+        $service = new TrackingService(
+            $entityManager,
+            $repository,
+            $factory,
+            $cache,
+            $truckerRepository,
+            $truckTypeRepository
+        );
+
+        $service->listAddressesByTruckType();
     }
 }
