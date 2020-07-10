@@ -9,7 +9,7 @@ After cloning this repository to your machine, get into the cloned directory by 
 and type `docker-composer up -d --build` to raise the containers. Once they are up, get into the PHP container by typing
 `docker exec -it trucker-api_php_1 bash`. You can also list the three containers with `docker ps` if you want to.
 
-The port to be reached by your dev tool (e.g. Postman) is `localhost:8001`.
+The port to be reached by your dev tool (e.g. Postman) is `localhost:8001`. To import a Postman collection, [click here](https://www.getpostman.com/collections/96ae9afea98fe451703a).
 
 ### Inside PHP container
 Once inside the container, you must run the command `composer install` go get the required packages. To create the database, run `php bin/console doctrine:database:create` and
@@ -21,7 +21,7 @@ delete line 30 and uncomment lines 31-34 in `trucker-api\src\Security\JwtAuthent
 
 **Beware!** It is going to wipe off Truck Types data loaded on migration.
 
-Also here in the container you can run Unit Tests by `php bin/phpunit`. It may run an installer in the first time. It will run the services unit tests.
+Also here in the container you can run Unit Tests with `./vendor/bin/simple_phpunit`. It may run an installer in the first time. It will run the services unit tests.
 
 ## Endpoints
 I will let the JSON examples to the end of this reading, so you don't get confused by the wall of text.
