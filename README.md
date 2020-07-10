@@ -5,13 +5,14 @@ This API is made to register, modify and delete truckers, its different truck ty
 This project implements Docker containers. First you have to install Docker and Docker Compose. It is easily installed by
 following [Docker documentation](https://docs.docker.com/get-docker/).
 
-
 After cloning this repository to your machine, get into the cloned directory by the terminal
 and type `docker-composer up -d --build` to raise the containers. Once they are up, get into the PHP container by typing
 `docker exec -it trucker-api_php_1 bash`. You can also list the three containers with `docker ps` if you want to.
 
+The port to be reached by your dev tool (e.g. Postman) is `localhost:8001`.
+
 ### Inside PHP container
-Once inside the container, you must run the command to create the database: `php bin/console doctrine:database:create` and
+Once inside the container, you must run the command `composer install` go get the required packages. To create the database, run `php bin/console doctrine:database:create` and
 then `php bin/console doctrine:migrations:migrate` to insert the tables into it.
 
 _**Advice**: There is a User Fixture already setted, but the authenticator is off for evaluation purposes. If you want to turn it on,
@@ -38,7 +39,27 @@ and its origin and destinations full addresses. This API needs the full addresse
 
 Besides that, you can also filter and sort responses as you prefer with query strings, adding it to the end of the URL with a `?` (examples below).
 
-# Requests and responses documentation
+### Must haves
+As required by the guidelines, here I explain how you will get the desired results.
+
+- To update truckers info, do a PUT request at `/truckers` endpoint with a JSON (check its template in the next section).
+
+- To have origin and destination of truckers, just hit `/tracking`. If you want to see all trackings of a trucker, add the filter `/tracking?trucker={id}`.
+
+- The endpoint to find all unloaded truckers, add the filter `/truckers?is_loaded=0`. It works to find loaded truckers as well. By default, if a trucker is unloaded
+and you are going to POST a new tracking to him(her), the API will set destination the same as the origin, even if the POST have a different destination.
+
+- Truckers who check in the terminal will be listed by `/tracking/check_in` endpoint. It is possible to add filters like a date interval, if (s)he is loaded and if you prefer to have the recent first (descending order): (`?since=YYYY-MM-DD&until=YYYY-MM-DD&is_loaded={0|1}&recent_first={0|1}`. All filters are optional. Get default filters in the next section. Latitude and longitude information are given by [LocationIQ](https://locationiq.com/) through [Geocoder lib](https://github.com/geocoder-php/Geocoder).
+
+- Now if you want to have checked in truckers by the last days, run `/tracking/recent?days={int}`. This way you can have a day, week, month or any other amount of days as you wish.
+
+- To see truckers who got its own truck, use the filter `truckers?is_owner={0|1}`.
+
+- To upload truckers data, you must run a PUT request on `/truckers/{id}` endpoint.
+
+> I hope from the bottom of my soul you guys like it! Thank you for the opportunity :)
+
+# Requests and responses
 ## Login
 ### (POST /login)
 _Request (application/json)_
@@ -610,6 +631,224 @@ _Response (200, application/json)_
                     "path": "/truckers/2"
                 }
             ]
+        }
+    ]
+}
+```
+
+### (GET /tracking/check_in) Get trucks by date range
+Special filters: `?since=YYYY-MM-DD&until=YYYY-MM-DD&is_loaded={0|1}&recent_first={0|1}`
+- `since`: Oldest point of the date range
+- `until`: The most recent date of the range. Default: `now`
+- `is_loaded`: Filter by loaded trucks. Default: `1`
+- `recent_first`: Order by descending check-in date; Default: `1`
+The response have the same format of `(GET) /trucking`
+_Response (200, application/json)_
+
+### (GET /tracking/check_in/recent) Get the recent trucks that passed by the terminal
+Special filters: `?days=1&is_loaded={0|1}&recent_first={0|1}`
+- `days`: Number of days past now. Default: `1` (today)
+- `is_loaded`: Filter by loaded trucks. Default: `1`
+- `recent_first`: Order by descending check-in date; Default: `1`
+The response is the same from `(GET) /trucking`
+_Response (200, application/json)_
+
+### (GET /tracking/truck_types) Get all trackings grouped by truck types
+_Response (200, application/json)_
+```
+{
+    "success": true,
+    "page": 1,
+    "itemsPerPage": null,
+    "data": [
+        {
+            "1": {
+                "truckTypeName": "Caminhão 3/4",
+                "trackings": [
+                    {
+                        "id": 1,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/1"
+                        },
+                        "from": {
+                            "id": 1,
+                            "street_name": "Rua Santa Barbara",
+                            "street_number": "1500",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.439815",
+                            "longitude": "-46.519099",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/1"
+                                }
+                            ]
+                        },
+                        "to": {
+                            "id": 2,
+                            "street_name": "Avenida Santa Barbara",
+                            "street_number": "300",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.458217",
+                            "longitude": "-46.507477",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/2"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/2"
+                        },
+                        "from": {
+                            "id": 1,
+                            "street_name": "Rua Santa Barbara",
+                            "street_number": "1500",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.439815",
+                            "longitude": "-46.519099",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/1"
+                                }
+                            ]
+                        },
+                        "to": {
+                            "id": 2,
+                            "street_name": "Avenida Santa Barbara",
+                            "street_number": "300",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.458217",
+                            "longitude": "-46.507477",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/2"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "2": {
+                "truckTypeName": "Caminhão Toco",
+                "trackings": []
+            },
+            "3": {
+                "truckTypeName": "Caminhão Truck",
+                "trackings": [
+                    {
+                        "id": 3,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/3"
+                        },
+                        "from": {
+                            "id": 3,
+                            "street_name": "Avenida Santa Barbara",
+                            "street_number": "123",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.458217",
+                            "longitude": "-46.507477",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/3"
+                                }
+                            ]
+                        },
+                        "to": {
+                            "id": 3,
+                            "street_name": "Avenida Santa Barbara",
+                            "street_number": "123",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.458217",
+                            "longitude": "-46.507477",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/3"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "4": {
+                "truckTypeName": "Carreta Simples",
+                "trackings": [
+                    {
+                        "id": 4,
+                        "_links": {
+                            "rel": "self",
+                            "path": "/tracking/4"
+                        },
+                        "from": {
+                            "id": 5,
+                            "street_name": "Avenida Santa Barbara",
+                            "street_number": "2222",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.458217",
+                            "longitude": "-46.507477",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/5"
+                                }
+                            ]
+                        },
+                        "to": {
+                            "id": 5,
+                            "street_name": "Avenida Santa Barbara",
+                            "street_number": "2222",
+                            "neighborhood": "Jardim Santa Barbara",
+                            "city": "Guarulhos",
+                            "state": "SP",
+                            "zip_code": "07191310",
+                            "latitude": "-23.458217",
+                            "longitude": "-46.507477",
+                            "_links": [
+                                {
+                                    "rel": "self",
+                                    "path": "/address/5"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "5": {
+                "truckTypeName": "Carreta Eixo Estendido",
+                "trackings": []
+            }
         }
     ]
 }
