@@ -25,10 +25,10 @@ Also here in the container you can run Unit Tests with `./vendor/bin/simple_phpu
 
 ## Endpoints
 I will let the JSON examples to the end of this reading, so you don't get confused by the wall of text.
-There is one endpoint to login, CRUD to truckers, truck types and trackings. You must mind that trackings need a trucker id and truckers need a track type.
+There is one endpoint to login and CRUD to truckers, truck types and trackings. You must mind that trackings need a trucker id and truckers need a track type.
 If you are going to populate it, you must start by truck types, than truckers and finally trackings.
 
-Login endpoint will validate your e-mail and password and return a JWT bearer token, so the API don't need to worry abount saving sessions.
+Login endpoint will validate your e-mail and password and return a JWT bearer token, so the API don't need to worry about saving sessions.
 
 Truck types need only a name, easy-peasy.
 
